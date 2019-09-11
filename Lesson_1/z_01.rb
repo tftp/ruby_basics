@@ -2,8 +2,8 @@
 print "Введите свое имя: "
 name = gets.chomp
 print "Введите свой рост: "
-growth = gets.chomp
-ideal_growth = growth.to_i - 110;
+growth = gets.chomp.to_i
+ideal_growth = growth - 110
 if ideal_growth > 0
   puts "#{name}, ваш идеальный вес: #{ideal_growth} кг."
 else
