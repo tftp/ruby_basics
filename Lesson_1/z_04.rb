@@ -14,5 +14,6 @@ D = Math.sqrt(d) if d.positive?
 # Output the result
 puts "Корней нет, дискриминант = #{d}" if d.negative?
 puts "Один корень x = #{- b / (2 * a)}, дискриминант = #{d}" if d.zero?
-puts "Два корня, x1 = #{(- b + D) / (2 * a)}, x2 = #{(- b - D) / (2 * a)}, \
-дискриминант = #{d}" if d.positive?
+if d.positive?
+  puts "Два корня, x1 = #{(- b + D) / (2 * a)}, x2 = #{(- b - D) / (2 * a)}, дискриминант = #{d}"
+end
