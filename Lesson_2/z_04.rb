@@ -1,7 +1,7 @@
 hh = {}
 num = 1
 
-for i in (:a..:z)
+(:a..:z).each do |i|
   hh[i] = num if i[/[aeiou]/]
   num += 1
 end

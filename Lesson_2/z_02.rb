@@ -1,4 +1,3 @@
-
 arr = []
 nach = 10
 kon = 100
@@ -9,5 +8,4 @@ loop do
   i += 5
   break if i > kon
 end
-
 print arr.inspect

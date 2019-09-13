@@ -1,4 +1,3 @@
-
 months = {
   january: 31,
   february: 28,
@@ -12,8 +11,7 @@ months = {
   october: 31,
   november: 30,
   desember: 31
-  }
-
+}
 months.each do |month, day|
   puts "#{month} = #{day} days" if day == 30
 end
