@@ -12,9 +12,7 @@ year_month[1] = 29 if (year % 4).zero? && !(year % 100).zero? || (year % 400).ze
 offset = month - 2
 num = day
 
-loop do
-  break if offset.negative?
-
+until offset.negative?
   num += year_month[offset]
   offset -= 1
 end
