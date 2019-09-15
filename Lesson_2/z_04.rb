@@ -1,10 +1,8 @@
 hh = {}
-num = 1
 Vowel = /[aeiou]/
 
-(:a..:z).each do |i|
-  hh[i] = num if i[Vowel]
-  num += 1
+(:a..:z).each.with_index(1) do |letter, i|
+  hh[letter] = i if letter[Vowel]
 end
 
 puts hh.inspect
