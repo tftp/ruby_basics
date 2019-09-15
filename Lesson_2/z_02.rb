@@ -1,11 +1,11 @@
-arr = []
-nach = 10
-kon = 100
+# Несколько способов со step
 
-i = nach
-loop do
-  arr << i
-  i += 5
-  break if i > kon
-end
-print arr.inspect
+arr = []
+(10..100).step(5){|i| arr << i}
+puts arr.inspect
+
+# Можно ещё так. И так и так оч. интересно. Я не знал, что так можно!
+
+arr = []
+arr = (10..100).step(5).to_a
+puts arr.inspect
