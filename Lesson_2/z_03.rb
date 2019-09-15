@@ -1,11 +1,8 @@
 fibonachy = [0, 1]
-i = 1
-next_num = 1
+i = 0
 
-while next_num < 100
+while 100 > next_num = fibonachy[i - 2] + fibonachy[i - 1]
   fibonachy << next_num
-  next_num = fibonachy[i] + fibonachy[i + 1]
-  i += 1
 end
 
 puts fibonachy.inspect
