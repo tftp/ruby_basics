@@ -17,7 +17,7 @@ class Route
 
   def list
     self.stations.each.with_index(1) do |station, index|
-      puts "#{index}. #{station}"
+      puts "#{index}. #{station.name}"
     end
   end
 
