@@ -4,7 +4,7 @@ class Train
 
   def initialize(number, type, wagons)
     @number = number
-    type['пассажирский'] ? @type = 'пассажирский' : @type = 'грузовой'
+    @type = type
     @wagons = wagons
     @speed = 0
     @route = []

@@ -2,17 +2,16 @@ class Route
   attr_accessor :stations
 
   def initialize(begin_st,end_st)
-    @stations = []
-    @stations << begin_st << end_st
+    @stations = [begin_st, end_st]
   end
 
 
-  def route_add(station)
-      self.stations.insert(-2, station)
+  def add_station(station)
+    stations.insert(-2, station)
   end
 
-  def route_del(station)
-    self.stations.delete_at(station-1) if station > 1 && station < self.stations.count
+  def del_station(station)
+    stations.delete(station) if station != stations.first && station != stations.last
   end
 
   def list
