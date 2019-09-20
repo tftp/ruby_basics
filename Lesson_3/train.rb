@@ -1,6 +1,6 @@
 class Train
   attr_accessor :speed, :wagons
-  attr_reader :type, :numberc
+  attr_reader :type, :number
 
   def initialize(number, type, wagons)
     @number = number
@@ -32,16 +32,16 @@ class Train
   def wagon_del
     self.wagons -= 1 if self.speed == 0
   end
-  
+
   def next_stat
 #    if @route[@route.index(@curr_station) + 1]
-      @next_station = @route[@route.index(@curr_station) + 1]
+      @next_station = @route.rotate(@route.index(@curr_station) + 1)[0]
 #    end
   end
 
   def prev_stat
 #    if @route[@route.index(@curr_station) - 1]
-     @prev_station = @route[@route.index(@curr_station) - 1]
+     @prev_station = @route.rotate(@route.index(@curr_station) - 1)[0]
 #    end
   end
 
