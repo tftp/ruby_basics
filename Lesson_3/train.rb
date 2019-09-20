@@ -1,6 +1,6 @@
 class Train
   attr_accessor :speed, :wagons
-  attr_reader :type, :number, :stat_cur
+  attr_reader :type, :numberc
 
   def initialize(number, type, wagons)
     @number = number
@@ -8,8 +8,9 @@ class Train
     @wagons = wagons
     @speed = 0
     @route = []
-    @index
-    @stat_cur
+    @curr_station
+    @next_station
+    @prev_station
   end
 
   def speed_up(speed = 5)
@@ -24,49 +25,57 @@ class Train
     self.wagons
   end
 
-  def change_wagons(add = -1)
-    add = 1 if add != -1
-    self.wagons += add if self.speed == 0
+  def wagon_add
+    self.wagons += 1 if self.speed == 0
+  end
+
+  def wagon_del
+    self.wagons -= 1 if self.speed == 0
+  end
+  
+  def next_stat
+#    if @route[@route.index(@curr_station) + 1]
+      @next_station = @route[@route.index(@curr_station) + 1]
+#    end
+  end
+
+  def prev_stat
+#    if @route[@route.index(@curr_station) - 1]
+     @prev_station = @route[@route.index(@curr_station) - 1]
+#    end
   end
 
   def add_route (route)
     @route = route.stations
-    @index = 0
-    @stat_cur = @route[@index]
-    @stat_cur.train_out(self)
-    @stat_cur.train_in(self)
+    @curr_station = @route[0]
+    prev_stat
+    next_stat
+    @curr_station.train_in(self)
   end
 
   def route_forward
     return if @route.empty?
-    @index += 1 if @index < @route.count - 1
-    @stat_cur.train_out(self)
-    @stat_cur = @route[@index]
-    @stat_cur.train_in(self)
+    @curr_station.train_out(self)
+    @curr_station = @next_station
+    next_stat
+    prev_stat
+    @curr_station.train_in(self)
   end
 
   def route_backward
     return if @route.empty?
-    @index -= 1 if @index > 0
-    @stat_cur.train_out(self)
-    @stat_cur = @route[@index]
-    @stat_cur.train_in(self)
+    @curr_station.train_out(self)
+    @curr_station = @prev_station
+    next_stat
+    prev_stat
+    @curr_station.train_in(self)
   end
 
   def what_station
     return if @route.empty?
-    case @index
-    when 0
-      puts "Поезд на #{@index+1} станции: #{@stat_cur.name}"
-      puts "Седующая станция: #{@route[1].name}"
-    when @route.count - 1
-      puts "Поезд на последней станции: #{@stat_cur.name}"
-      puts "Предыдущая станция: #{@route[-2].name}"
-    else
-      puts "Поезд на #{@index+1} станции: #{@stat_cur.name}"
-      puts "Предыдущая станция: #{@route[@index - 1].name}"
-      puts "Седующая станция: #{@route[@index + 1].name}"
-    end
+      puts "Поезд на станции: #{@curr_station.name}"
+      puts "Предыдущая станция: #{@prev_station.name}"
+      puts "Седующая станция: #{@next_station.name}"
   end
 
 end
