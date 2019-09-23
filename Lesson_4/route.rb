@@ -15,9 +15,10 @@ class Route
   end
 
   def list
-    self.stations.each.with_index(1) do |station, index|
-      puts "#{index}. #{station.name}"
+    self.stations.each do |station|
+      print "--#{station.name}--"
     end
+    puts
   end
 
 end
