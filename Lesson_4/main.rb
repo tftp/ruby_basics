@@ -61,6 +61,14 @@ class RailRoad
           puts
         when '2'
           #создание маршрута
+          print "Доступны следующие станции для маршрута: "
+          if @stations.empty? 
+            print "нет доступных станций." 
+          else
+            @stations.each {|station| print " #{station.name} "}
+          end
+          
+          puts  
         when '3'
           #создание вагона
         when '4'
