@@ -98,9 +98,25 @@ class RailRoad
           print 'Введите название станции для добавления: '
           station_between = gets.chomp
           station_between = @stations.select{|station| station.name == station_between}[0]
-          @routes[variant - 1].add_station(station_between) unless variant.zero? || station_between.nil?
-          puts variant.zero? || station_between.nil? ? 'Станция не добавлена.' : 'Станция добавлена.'
+          if (@routes[variant - 1].add_station(station_between) unless variant.zero? || station_between.nil?)
+            puts 'Станция добавлена.' 
+          else
+            puts 'Станция не добавлена.'
+          end
         when '2'
+          puts 'Доступны следующие маршруты:'
+          list_object(@routes)
+          print 'Введите номер маршрута из которого удалить станцию: '
+          variant = gets.chomp.to_i
+          list_station
+          print 'Введите название станции для удаления: '
+          station_between = gets.chomp
+          station_between = @stations.select{|station| station.name == station_between}[0]
+          if (@routes[variant - 1].del_station(station_between) unless variant.zero? || station_between.nil?)
+            puts 'Станция удалена.' 
+          else
+            puts 'Станция не удалена.'
+          end
         when '3'
         when '4'
         when '5'
