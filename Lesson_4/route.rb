@@ -1,8 +1,9 @@
 class Route
-  attr_accessor :stations
+  attr_accessor :stations, :number
 
-  def initialize(begin_st,end_st)
+  def initialize(begin_st, end_st, number)
     @stations = [begin_st, end_st]
+    @number = number
   end
 
 
