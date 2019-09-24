@@ -93,13 +93,15 @@ class RailRoad
           puts 'Доступны следующие маршруты:'
           list_object(@routes)
           print 'Введите номер маршрута в который добавить станцию: '
-          variant = gets.chomp.to_i
+          number = gets.chomp
           list_station
           print 'Введите название станции для добавления: '
           station_between = gets.chomp
-          station_between = @stations.select{|station| station.name == station_between}[0]
-          if (@routes[variant - 1].add_station(station_between) unless variant.zero? || station_between.nil?)
-            puts 'Станция добавлена.' 
+          station_between = @stations.find{|station| station.name == station_between}
+          route = @routes.find{|rout| rout.number == number} if @routes
+          if route
+            route.add_station(station_between)
+            puts 'Станция добавлена.'
           else
             puts 'Станция не добавлена.'
           end
@@ -107,13 +109,14 @@ class RailRoad
           puts 'Доступны следующие маршруты:'
           list_object(@routes)
           print 'Введите номер маршрута из которого удалить станцию: '
-          variant = gets.chomp.to_i
-          list_station
+          number = gets.chomp
+#          list_station
           print 'Введите название станции для удаления: '
           station_between = gets.chomp
-          station_between = @stations.select{|station| station.name == station_between}[0]
-          if (@routes[variant - 1].del_station(station_between) unless variant.zero? || station_between.nil?)
-            puts 'Станция удалена.' 
+          station_between = @stations.find{|station| station.name == station_between}
+          route = @routes.find{|rout| rout.number == number} if @routes
+          if route && route.del_station(station_between)
+            puts 'Станция удалена.'
           else
             puts 'Станция не удалена.'
           end
@@ -121,14 +124,73 @@ class RailRoad
           puts 'Доступны следующие маршруты:'
           list_object(@routes)
           print 'Введите номер маршрута для добавления поезду: '
-          variant_route = gets.chomp.to_i
+          number_route = gets.chomp
           puts 'Доступны следующие поезда:'
           list_object(@trains)
           print 'Введите номер поезда для добавления маршрута: '
-          variant_train = gets.chomp.to_i
+          number_train = gets.chomp
+          route = @routes.find{|rout| rout.number == number_route} if @routes
+          train = @trains.find{|train| train.number == number_train} if @trains
+          if route && train && train.add_route(route)
+            puts 'Маршрут добавлен.'
+          else
+            puts "Маршрут не добавлен. #{route} #{train}"
+          end
         when '4'
+          puts 'Доступны следующие поезда:'
+          list_object(@trains)
+          print 'Введите номер поезда для добавления вагона: '
+          number_train = gets.chomp
+          train = @trains.find{|train| train.number == number_train} if @trains
+          puts 'Доступны следующие вагоны: '
+          list_object(@wagons)
+          print 'Введите номер вагона: '
+          number_wagon = gets.chomp
+          wagon = @wagons.find{|wagon| wagon.number == number_wagon} if @wagons
+          if train && wagon && train.type == wagon.type && train.wagon_add(wagon)
+            puts "Вагон добавлен"
+          else
+            puts "Вагон не добавлен"
+          end
         when '5'
+          puts 'Доступны следующие поезда:'
+          list_object(@trains)
+          print 'Введите номер поезда для удаления вагона: '
+          number_train = gets.chomp
+          train = @trains.find{|train| train.number == number_train} if @trains
+          puts 'Доступны следующие вагоны: '
+          train.wagons.each {|wagon| print " #{wagon.number} "}
+          print "\nВведите номер вагона: "
+          number_wagon = gets.chomp
+          wagon = @wagons.find{|wagon| wagon.number == number_wagon} if @wagons
+          if train && wagon && train.type == wagon.type && train.wagon_del(wagon)
+            puts "Вагон удален"
+          else
+            puts "Вагон не удален"
+          end
         when '6'
+          puts 'Доступны следующие поезда:'
+          @trains.each{|train| puts " Номер: #{train.number}" if train.curr_station}
+          print 'Введите номер поезда для отправления: '
+          number_train = gets.chomp
+          train = @trains.find{|train| train.number == number_train} if @trains
+          if train
+            loop do
+              puts "Поезд находится на станции: #{train.curr_station.name}"
+              puts 'Введите 1 для отправления поезда вперед'
+              puts 'Введите 2 для отправления поезда назад'
+              puts 'Введите 0 для выхода в предыдущее меню'
+              variant = gets.chomp
+              case variant
+                when '1'
+                  train.route && train.route_forward
+                when '2'
+                  train.route && train.route_backward
+                when '0'
+                  break
+              end
+            end
+          end
         when '0'
           break
       end
@@ -144,10 +206,6 @@ class RailRoad
   end
 
   private
-  
-  def list_route
-    
-  end
 
   def list_station
     print 'Доступны следующие станции для маршрута: '
@@ -160,13 +218,13 @@ class RailRoad
   end
 
   def list_object(arr_object)
-    arr_object.each.with_index(1) do |object, index|
-      print "#{index}. #{object}: "
-      object.list if object.methods.include?(:list)
-      print " Тип: #{object.type}. " if object.methods.include?(:type)
-      print " Номер: #{object.number}. " if object.methods.include?(:number)
-      puts
-    end
+      arr_object.each do |object|
+        print "#{object}: "
+        print " Номер: #{object.number}. " if object.methods.include?(:number)
+        print " Тип: #{object.type}. " if object.methods.include?(:type)
+        object.list if object.methods.include?(:list)
+        puts
+      end
   end
 
   def make_train(variant)
@@ -174,9 +232,19 @@ class RailRoad
     number = gets.chomp
     case variant
       when '1'
-        @trains << TrainCargo.new(number)
+        unless @trains.find{|train| train.number == number}
+          @trains << TrainCargo.new(number)
+          puts "Поезд создан"
+        else
+          puts "Поезд не создан"
+        end
       when '2'
-        @trains << TrainPass.new(number)
+        unless @trains.find{|train| train.number == number}
+          @trains << TrainPass.new(number)
+          puts "Поезд создан"
+        else
+          puts "Поезд не создан"
+        end
     end
   end
 
@@ -185,9 +253,19 @@ class RailRoad
     number = gets.chomp
     case variant
       when '1'
-        @wagons << WagonCargo.new(number)
+        unless @wagons.find{|wagon| wagon.number == number}
+          @wagons << WagonCargo.new(number)
+          puts "Вагон создан"
+        else
+          puts "Вагон не создан"
+        end
       when '2'
-        @wagons << WagonPass.new(number)
+        unless @wagons.find{|wagon| wagon.number == number}
+          @wagons << WagonPass.new(number)
+          puts "Вагон создан"
+        else
+          puts "Вагон не создан"
+        end
     end
   end
 
@@ -197,18 +275,26 @@ class RailRoad
     for station_number in (1..number)
       print "Введите название #{station_number} станции: "
       name = gets.chomp
-      @stations << Station.new(name)
+      unless @stations.find{|station| station.name == name}
+        @stations << Station.new(name)
+        puts "Станция создана"
+      else
+        puts "Станция не создана"
+      end
     end
   end
 
   def make_rout
     print "\nВведите начальную станцию маршрута: "
     first_station = gets.chomp
-    first_station = @stations.select{|station| station.name == first_station}[0]
+    first_station = @stations.find{|station| station.name == first_station}
     print 'Введите конечную станцию маршрута: '
     last_station = gets.chomp
-    last_station = @stations.select{|station| station.name == last_station}[0]
-    @routes << Route.new(first_station, last_station)
+    last_station = @stations.find{|station| station.name == last_station}
+    return puts 'Маршрут не создан ' if last_station.nil? || first_station.nil?
+    number = Time.now.sec.to_s
+    @routes << Route.new(first_station, last_station, number)
+    puts "Машрут создан"
   end
 
 end
