@@ -118,6 +118,14 @@ class RailRoad
             puts 'Станция не удалена.'
           end
         when '3'
+          puts 'Доступны следующие маршруты:'
+          list_object(@routes)
+          print 'Введите номер маршрута для добавления поезду: '
+          variant_route = gets.chomp.to_i
+          puts 'Доступны следующие поезда:'
+          list_object(@trains)
+          print 'Введите номер поезда для добавления маршрута: '
+          variant_train = gets.chomp.to_i
         when '4'
         when '5'
         when '6'
@@ -136,6 +144,10 @@ class RailRoad
   end
 
   private
+  
+  def list_route
+    
+  end
 
   def list_station
     print 'Доступны следующие станции для маршрута: '
@@ -151,6 +163,8 @@ class RailRoad
     arr_object.each.with_index(1) do |object, index|
       print "#{index}. #{object}: "
       object.list if object.methods.include?(:list)
+      print " Тип: #{object.type}. " if object.methods.include?(:type)
+      print " Номер: #{object.number}. " if object.methods.include?(:number)
       puts
     end
   end
