@@ -7,7 +7,7 @@ class Route
 
 
   def add_station(station)
-    stations.insert(-2, station)
+    stations.insert(-2, station) if station != stations.first && station != stations.last
   end
 
   def del_station(station)
