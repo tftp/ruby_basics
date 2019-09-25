@@ -41,6 +41,9 @@ class RailRoad
     end
   end
 
+  private
+ #Нижестоящие методы испоьзуем только в классе RailRoad
+
   def menu_1
     loop do
       puts 'Введите 1, чтобы создать станцию'
@@ -144,8 +147,8 @@ class RailRoad
           train = @trains.find{|train| train.number == number_train} if @trains
           puts 'Доступны следующие вагоны: '
           #list_object(@wagons)
-          @wagons.each {|wagon| print " #{wagon.number} " unless wagon.train}
-          print 'Введите номер вагона: '
+          @wagons.each {|wagon| print " #{wagon.number} " if wagon.train.empty?}
+          print "\nВведите номер вагона: "
           number_wagon = gets.chomp
           wagon = @wagons.find{|wagon| wagon.number == number_wagon} if @wagons
           if train && wagon && train.type == wagon.type && train.wagon_add(wagon)
@@ -196,20 +199,23 @@ class RailRoad
           break
       end
     end
-
   end
 
-  def data_clear
-    @stations =[]
-    @trains = []
-    @routes = []
-    @wagons = []
+  def menu_3
+    puts "Вывод данных об объектах."
+    list_station
+    print "\nВведите название станции, что бы увидеть список поездов на станции: "
+    station_name = gets.chomp
+    station = @stations.find{|station| station.name == station_name} if @stations
+    if station && station.trains.empty?
+      puts "\nНет поездов на станции #{station.name}"
+    else
+      station.output if station
+    end
   end
-
-  private
 
   def list_station
-    print 'Доступны следующие станции для маршрута: '
+    print 'Доступны следующие станции: '
     if @stations.empty?
       print 'нет доступных станций.'
     else
@@ -297,5 +303,4 @@ class RailRoad
     @routes << Route.new(first_station, last_station, number)
     puts "Машрут создан"
   end
-
 end
