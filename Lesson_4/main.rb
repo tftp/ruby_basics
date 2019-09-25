@@ -99,7 +99,7 @@ class RailRoad
           station_between = gets.chomp
           station_between = @stations.find{|station| station.name == station_between}
           route = @routes.find{|rout| rout.number == number} if @routes
-          if route
+          if route && station_between
             route.add_station(station_between)
             puts 'Станция добавлена.'
           else
@@ -143,7 +143,8 @@ class RailRoad
           number_train = gets.chomp
           train = @trains.find{|train| train.number == number_train} if @trains
           puts 'Доступны следующие вагоны: '
-          list_object(@wagons)
+          #list_object(@wagons)
+          @wagons.each {|wagon| print " #{wagon.number} " unless wagon.train}
           print 'Введите номер вагона: '
           number_wagon = gets.chomp
           wagon = @wagons.find{|wagon| wagon.number == number_wagon} if @wagons
@@ -183,9 +184,9 @@ class RailRoad
               variant = gets.chomp
               case variant
                 when '1'
-                  train.route && train.route_forward
+                  train.route_forward
                 when '2'
-                  train.route && train.route_backward
+                  train.route_backward
                 when '0'
                   break
               end

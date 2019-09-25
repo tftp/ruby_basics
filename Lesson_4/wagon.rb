@@ -1,10 +1,10 @@
 class Wagon
-  attr_reader :number, :type
+  attr_reader :number, :type, :train
 
   def initialize(number)
     @type
     @number = number
-    @train
+    @train = []
   end
 
   def train_in(train)
