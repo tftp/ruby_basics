@@ -11,14 +11,6 @@ class Train
     @curr_station
   end
 
-  def speed_up(speed = 5)
-    self.speed += speed
-  end
-
-  def speed_down
-    self.speed = 0
-  end
-
   def wagon_add (wagon)
     if self.speed == 0
       self.wagons << wagon
@@ -28,18 +20,6 @@ class Train
 
   def wagon_del (wagon)
     self.wagons.delete(wagon)  if self.speed == 0
-  end
-
-  def next_stat
-    @route.stations[@route.stations.index(@curr_station) + 1]
-  end
-
-  def prev_stat
-    unless @route.stations.index(@curr_station) - 1 == - 1
-      @route.stations[@route.stations.index(@curr_station) - 1]
-    else
-      nil
-    end
   end
 
   def add_route (route)
@@ -60,6 +40,29 @@ class Train
     @curr_station.train_out(self)
     @curr_station = prev_stat
     @curr_station.train_in(self)
+  end
+
+  private
+  #нижестоящие методы пока не используются
+
+  def next_stat
+    @route.stations[@route.stations.index(@curr_station) + 1]
+  end
+
+  def prev_stat
+    unless @route.stations.index(@curr_station) - 1 == - 1
+      @route.stations[@route.stations.index(@curr_station) - 1]
+    else
+      nil
+    end
+  end
+
+  def speed_up(speed = 5)
+    self.speed += speed
+  end
+
+  def speed_down
+    self.speed = 0
   end
 
   def what_station

@@ -7,6 +7,9 @@ class Wagon
     @train = []
   end
 
+  protected
+  #нижестоящие методы можно использовать в подклассах
+
   def train_in(train)
     @train << train
   end
@@ -14,6 +17,9 @@ class Wagon
   def train_out(train)
     @train.delete(train)
   end
+
+  private
+  #методы нижестоящие пока не испоьзуем
 
   def info
     puts "Тип: #{@type}."

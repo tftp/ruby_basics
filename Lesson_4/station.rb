@@ -1,6 +1,6 @@
 class Station
 
-  attr_reader :name
+  attr_reader :name, :trains
 
   def initialize(name)
     @name = name
@@ -17,11 +17,14 @@ class Station
 
   def output
     return if @trains.empty?
-    puts "Список поездов на станции  #{@name}:"
+    puts "\nСписок поездов на станции  #{@name}:"
     @trains.each do |train|
-          puts "Поезд номер #{train.number}, тип: #{train.type}"
+          puts "Поезд номер #{train.number}, тип: #{train.type}, коичество вагонов: #{train.wagons.count}"
     end
   end
+
+  protected
+  #нижестоящие методы пока не используются
 
   def output_type(type)
     number_type = @trains.count{|train| train.type == type}
