@@ -4,24 +4,28 @@ module InstanceCounter
     base.send :include, InstanceMethods
   end
   module ClassMethods
-    @instances = 0
 
     def instances
-      @instances
+      @all_instances.count
     end
-    
-    def instances_increment
-      @instances += 1
+
+    def instances_increment(instance)
+      unless @all_instances
+        @all_instances = []
+        @all_instances << instance
+      else
+        @all_instances << instance
+      end
     end
   end
-  
+
   module InstanceMethods
 #   private
 #    @@instances = 0
-  
+
     def register_instance
-      self.class.instances_increment
+      self.class.instances_increment(self)
     end
   end
-  
+
 end
