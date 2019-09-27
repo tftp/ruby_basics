@@ -174,13 +174,13 @@ class RailRoad
           end
         when '6'
           puts 'Доступны следующие поезда:'
-          @trains.each{|train| puts " Номер: #{train.number}" if train.curr_station}
+          @trains.each{|train| puts " Номер: #{train.number}" if train.current_station}
           print 'Введите номер поезда для отправления: '
           number_train = gets.chomp
           train = @trains.find{|train| train.number == number_train} if @trains
           if train
             loop do
-              puts "Поезд находится на станции: #{train.curr_station.name}"
+              puts "Поезд находится на станции: #{train.current_station.name}"
               puts 'Введите 1 для отправления поезда вперед'
               puts 'Введите 2 для отправления поезда назад'
               puts 'Введите 0 для выхода в предыдущее меню'

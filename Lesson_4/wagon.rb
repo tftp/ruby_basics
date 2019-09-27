@@ -7,9 +7,6 @@ class Wagon
     @train = []
   end
 
-  protected
-  #нижестоящие методы можно использовать в подклассах
-
   def train_in(train)
     @train << train
   end

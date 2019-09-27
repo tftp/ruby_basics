@@ -1,6 +1,6 @@
 class Train
   attr_accessor :speed, :wagons
-  attr_reader :type, :number, :curr_station
+  attr_reader :type, :number, :current_station
 
   def initialize(number)
     @number = number
@@ -8,7 +8,7 @@ class Train
     @wagons = []
     @speed = 0
     @route
-    @curr_station
+    @current_station
   end
 
   def wagon_add (wagon)
@@ -19,41 +19,42 @@ class Train
   end
 
   def wagon_del (wagon)
-    self.wagons.delete(wagon)  if self.speed == 0
+    if self.speed == 0
+      self.wagons.delete(wagon)
+      wagon.train_out(self)
+    end
   end
 
   def add_route (route)
     @route = route
-    @curr_station = @route.stations[0]
-    @curr_station.train_in(self)
+    @current_station = @route.stations[0]
+    @current_station.train_in(self)
   end
 
   def route_forward
     return unless next_stat
-    @curr_station.train_out(self)
-    @curr_station = next_stat
-    @curr_station.train_in(self)
+    @current_station.train_out(self)
+    @current_station = next_stat
+    @current_station.train_in(self)
   end
 
   def route_backward
     return unless prev_stat
-    @curr_station.train_out(self)
-    @curr_station = prev_stat
-    @curr_station.train_in(self)
+    @current_station.train_out(self)
+    @current_station = prev_stat
+    @current_station.train_in(self)
   end
 
   private
   #нижестоящие методы пока не используются
 
   def next_stat
-    @route.stations[@route.stations.index(@curr_station) + 1]
+    @route.stations[@route.stations.index(@current_station) + 1]
   end
 
   def prev_stat
-    unless @route.stations.index(@curr_station) - 1 == - 1
-      @route.stations[@route.stations.index(@curr_station) - 1]
-    else
-      nil
+    unless @route.stations.index(@current_station) - 1 == - 1
+      @route.stations[@route.stations.index(@current_station) - 1]
     end
   end
 
@@ -67,7 +68,7 @@ class Train
 
   def what_station
     return if @route.stations.empty?
-      puts "Поезд на станции: #{@curr_station.name}"
+      puts "Поезд на станции: #{@current_station.name}"
       puts "Предыдущая станция: #{prev_stat ? prev_stat.name : 'нет станций'}"
       puts "Седующая станция: #{next_stat ? next_stat.name : 'нет станций' }"
   end
