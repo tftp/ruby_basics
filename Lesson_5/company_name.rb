@@ -1,4 +1,4 @@
-module Company_name
+module CompanyName
   
   def input_name_company (name)
     @name_company = name

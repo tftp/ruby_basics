@@ -1,5 +1,12 @@
 class Train
-  include Company_name
+  include CompanyName
+  include InstanceCounter
+  @@all_train = []
+  
+  def self.find (number)
+    @@all_train.find{|train| train.number == number}
+  end
+  
   attr_accessor :speed, :wagons
   attr_reader :type, :number, :current_station
 
@@ -10,6 +17,8 @@ class Train
     @speed = 0
     @route
     @current_station
+    @@all_train << self
+    register_instance
   end
 
   def wagon_add (wagon)

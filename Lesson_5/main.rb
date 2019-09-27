@@ -1,4 +1,5 @@
 require_relative 'company_name'
+require_relative 'instance_counter'
 require_relative 'train'
 require_relative 'train_pass'
 require_relative 'train_cargo'

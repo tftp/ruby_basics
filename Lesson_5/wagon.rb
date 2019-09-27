@@ -1,5 +1,5 @@
 class Wagon
-  include Company_name
+  include CompanyName
   attr_reader :number, :type, :train
 
   def initialize(number)
