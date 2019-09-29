@@ -1,28 +1,24 @@
 module InstanceCounter
-  def self.included (base)
+  def self.included(base)
     base.extend(ClassMethods)
     base.send :include, InstanceMethods
   end
+  
   module ClassMethods
-
     def instances
-      @all_instances.count
+      @all_instances.count if @all_instances
     end
 
     def instances_increment(instance)
-      unless @all_instances
-        @all_instances = []
-        @all_instances << instance
-      else
-        @all_instances << instance
-      end
+      @all_instances ||= []
+      @all_instances << instance
     end
   end
 
   module InstanceMethods
-#   private
-#    @@instances = 0
 
+   protected
+   #потому что участвуют подклассы 
     def register_instance
       self.class.instances_increment(self)
     end
