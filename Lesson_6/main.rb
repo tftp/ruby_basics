@@ -226,7 +226,7 @@ class RailRoad
     train = @trains.find{|train| train.number == number_train} if @trains
     if train
       loop do
-        puts "Поезд находится на станции: #{train.current_station.name}"
+        train.what_station
         puts 'Введите 1 для отправления поезда вперед'
         puts 'Введите 2 для отправления поезда назад'
         puts 'Введите 0 для выхода в предыдущее меню'
@@ -253,8 +253,8 @@ class RailRoad
     puts
   end
 
-  def list_object(arr_object)
-      arr_object.each do |object|
+  def list_object(array_object)
+      array_object.each do |object|
         print "#{object}: "
         print " Номер: #{object.number}. " if object.methods.include?(:number)
         print " Тип: #{object.type}. " if object.methods.include?(:type)

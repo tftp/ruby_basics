@@ -3,7 +3,6 @@ class Wagon
   attr_reader :number, :type, :train
 
   def initialize(number)
-    @type
     @number = number
     @train = []
   end

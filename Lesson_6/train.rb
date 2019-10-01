@@ -4,7 +4,7 @@ class Train
   @@all_train = {}
   
   def self.find(number)
-    @@all_train[number.to_s]
+      @@all_train[number.to_s]
   end
   
   attr_accessor :speed, :wagons
@@ -34,7 +34,7 @@ class Train
 
   def add_route (route)
     @route = route
-    @current_station = @route.stations[0]
+    @current_station = @route.stations.first
     @current_station.train_in(self)
   end
 
@@ -50,6 +50,13 @@ class Train
     @current_station.train_out(self)
     @current_station = prev_stat
     @current_station.train_in(self)
+  end
+
+  def what_station
+    return if @route.stations.empty?
+      puts "Поезд на станции: #{@current_station.name}"
+      puts "Предыдущая станция: #{prev_stat ? prev_stat.name : 'нет станций'}"
+      puts "Седующая станция: #{next_stat ? next_stat.name : 'нет станций' }"
   end
 
   private
@@ -71,13 +78,6 @@ class Train
 
   def speed_down
     self.speed = 0
-  end
-
-  def what_station
-    return if @route.stations.empty?
-      puts "Поезд на станции: #{@current_station.name}"
-      puts "Предыдущая станция: #{prev_stat ? prev_stat.name : 'нет станций'}"
-      puts "Седующая станция: #{next_stat ? next_stat.name : 'нет станций' }"
   end
 
 end
