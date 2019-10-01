@@ -117,12 +117,13 @@ class RailRoad
   end
 
   def menu_3
-    puts "Вывод данных об объектах."
+    puts "\nВывод данных об объектах."
     list_station
     print "\nВведите название станции, что бы увидеть список поездов на станции: "
     station_name = gets.chomp
     station = @stations.find{|station| station.name == station_name} if @stations
-    if station && station.trains.empty?
+    return unless validate?(station)
+    if station.trains.empty?
       puts "\nНет поездов на станции #{station.name}"
     else
       station.output if station
@@ -134,17 +135,15 @@ class RailRoad
     list_object(@routes)
     print 'Введите номер маршрута в который добавить станцию: '
     number = gets.chomp
+    route = @routes.find{|rout| rout.number == number} if @routes
+    return unless validate?(route)
     list_station
     print 'Введите название станции для добавления: '
     station_between = gets.chomp
-    station_between = @stations.find{|station| station.name == station_between}
-    route = @routes.find{|rout| rout.number == number} if @routes
-    if route && station_between
-      route.add_station(station_between)
-      puts 'Станция добавлена.'
-    else
-      puts 'Станция не добавлена.'
-    end
+    station = @stations.find{|station| station.name == station_between} if @stations
+    return unless validate?(station)
+    route.add_station(station_between)
+    puts "Станция #{station} добавлена."
   end
 
   def del_station_from_route
@@ -152,12 +151,14 @@ class RailRoad
     list_object(@routes)
     print 'Введите номер маршрута из которого удалить станцию: '
     number = gets.chomp
+    route = @routes.find{|rout| rout.number == number} if @routes
+    return unless validate?(route)
     print 'Введите название станции для удаления: '
     station_between = gets.chomp
-    station_between = @stations.find{|station| station.name == station_between}
-    route = @routes.find{|rout| rout.number == number} if @routes
-    if route && route.del_station(station_between)
-      puts 'Станция удалена.'
+    station = @stations.find{|station| station.name == station_between} if @stations
+    return unless validate?(station)
+    if route.del_station(station)
+      puts 'Станция #{station_between} удалена.'
     else
       puts 'Станция не удалена.'
     end
@@ -168,16 +169,18 @@ class RailRoad
     list_object(@routes)
     print 'Введите номер маршрута для добавления поезду: '
     number_route = gets.chomp
+    route = @routes.find{|rout| rout.number == number_route} if @routes
+    return unless validate?(route)
     puts 'Доступны следующие поезда:'
     list_object(@trains)
     print 'Введите номер поезда для добавления маршрута: '
     number_train = gets.chomp
-    route = @routes.find{|rout| rout.number == number_route} if @routes
     train = @trains.find{|train| train.number == number_train} if @trains
-    if route && train && train.add_route(route)
+    return unless validate?(train)
+    if train.add_route(route)
       puts 'Маршрут добавлен.'
     else
-      puts "Маршрут не добавлен. #{route} #{train}"
+      puts "Маршрут не добавлен."
     end
   end
 
@@ -187,13 +190,14 @@ class RailRoad
     print 'Введите номер поезда для добавления вагона: '
     number_train = gets.chomp
     train = @trains.find{|train| train.number == number_train} if @trains
+    return unless validate?(train)
     puts 'Доступны следующие вагоны: '
-    #list_object(@wagons)
     @wagons.each {|wagon| print " #{wagon.number} " if wagon.train.empty?}
     print "\nВведите номер вагона: "
     number_wagon = gets.chomp
     wagon = @wagons.find{|wagon| wagon.number == number_wagon} if @wagons
-    if train && wagon && train.type == wagon.type && train.wagon_add(wagon)
+    return unless validate?(wagon)
+    if train.type == wagon.type && train.wagon_add(wagon)
       puts "Вагон добавлен"
     else
       puts "Вагон не добавлен"
@@ -206,12 +210,14 @@ class RailRoad
     print 'Введите номер поезда для удаления вагона: '
     number_train = gets.chomp
     train = @trains.find{|train| train.number == number_train} if @trains
+    return unless validate?(train)
     puts 'Доступны следующие вагоны: '
     train.wagons.each {|wagon| print " #{wagon.number} "}
     print "\nВведите номер вагона: "
     number_wagon = gets.chomp
     wagon = @wagons.find{|wagon| wagon.number == number_wagon} if @wagons
-    if train && wagon && train.type == wagon.type && train.wagon_del(wagon)
+    return unless validate?(wagon)
+    if train.type == wagon.type && train.wagon_del(wagon)
       puts "Вагон удален"
     else
       puts "Вагон не удален"
@@ -224,21 +230,20 @@ class RailRoad
     print 'Введите номер поезда для отправления: '
     number_train = gets.chomp
     train = @trains.find{|train| train.number == number_train} if @trains
-    if train
-      loop do
-        train.what_station
-        puts 'Введите 1 для отправления поезда вперед'
-        puts 'Введите 2 для отправления поезда назад'
-        puts 'Введите 0 для выхода в предыдущее меню'
-        variant = gets.chomp
-        case variant
-          when '1'
-            train.route_forward
-          when '2'
-            train.route_backward
-          when '0'
-            break
-        end
+    return unless validate?(train)
+    loop do
+      train.what_station
+      puts 'Введите 1 для отправления поезда вперед'
+      puts 'Введите 2 для отправления поезда назад'
+      puts 'Введите 0 для выхода в предыдущее меню'
+      variant = gets.chomp
+      case variant
+        when '1'
+          train.route_forward
+        when '2'
+          train.route_backward
+        else
+          break
       end
     end
   end
@@ -359,22 +364,23 @@ class RailRoad
     print "\nВведите начальную станцию маршрута: "
     first_station = gets.chomp
     first_station = @stations.find{|station| station.name == first_station}
+    return unless validate?(first_station)
     print 'Введите конечную станцию маршрута: '
     last_station = gets.chomp
     last_station = @stations.find{|station| station.name == last_station}
+    return unless validate?(last_station)
     return puts 'Маршрут не создан ' if last_station.nil? || first_station.nil?
     number = Time.now.sec.to_s
     @routes << Route.new(first_station, last_station, number)
     puts "Машрут создан"
   end
 
-  def validate!
-    raise 'Введено пустое значение' if name.empty?
-    raise 'Введено неправильное название!' if name !~ VALID_NAME_STATION
+  def validate!(data)
+    raise "Неправильный ввод данных!!!\n\n" if data.nil?
   end
 
-  def validate?
-    validate!
+  def validate?(data)
+    validate!(data)
     true
   rescue => e
     puts e.message
