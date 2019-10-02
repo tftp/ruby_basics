@@ -2,9 +2,11 @@ class Train
   include CompanyName
   include InstanceCounter
   @@all_train = {}
+  VALID_NAME_TRAIN = /^\w{3}-?\w{2}$/
+
   
   def self.find(number)
-      @@all_train[number.to_s]
+      @@all_train[number]
   end
   
   attr_accessor :speed, :wagons
@@ -12,6 +14,7 @@ class Train
 
   def initialize(number)
     @number = number
+    validate!
     @wagons = []
     @speed = 0
     @@all_train[number] = self
@@ -70,6 +73,11 @@ class Train
     unless @route.stations.index(@current_station) - 1 == - 1
       @route.stations[@route.stations.index(@current_station) - 1]
     end
+  end
+
+  def validate!
+    raise "Введён неправильный номер поезда!\n\n" if number !~ VALID_NAME_TRAIN
+    raise "Такой номер уже есть!\n\n" if @@all_train[number]
   end
 
   def speed_up(speed = 5)

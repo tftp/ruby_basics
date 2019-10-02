@@ -12,9 +12,6 @@ require_relative 'route'
 
 class RailRoad
   attr_reader :stations, :routes, :trains, :wagons
-  VALID_NAME_STATION = /^[a-zA-Z]+\d*$/
-  VALID_NAME_TRAIN = /^\w{3}-?\w{2}$/
-  VALID_NAME_WAGON = /^\d{3}$/
 
   def initialize
     @stations =[]
@@ -72,14 +69,14 @@ class RailRoad
           #создание вагона
           puts 'Введите 1 для создания грузового вагона'
           puts 'Введите 2 для создания пассажирского вагона'
-          variant = gets.chomp
-          make_wagon(variant)
+          variant = gets.chomp.to_i
+          make_wagon(variant) if variant.between?(1, 2)
         when '4'
           #создание поезда
           puts 'Введите 1 для создания грузового поезда'
           puts 'Введите 2 для создания пассажирского поезда'
-          variant = gets.chomp
-          make_train(variant)
+          variant = gets.chomp.to_i
+          make_train(variant) if variant.between?(1, 2)
         when '0'
           #выход на предыдущийс уровень
           break
@@ -269,32 +266,17 @@ class RailRoad
   end
 
   def make_train(variant)
-    case variant
-      when '1'
-        number = check_number_train
-        unless @trains.find{|train| train.number == number}
-          @trains << TrainCargo.new(number)
-          puts "Поезд #{number} создан"
-        else
-          puts "Поезд не создан"
-        end
-      when '2'
-        number = check_number_train
-        unless @trains.find{|train| train.number == number}
-          @trains << TrainPass.new(number)
-          puts "Поезд #{number} создан"
-        else
-          puts "Поезд не создан"
-        end
-    end
-  end
-
-  def check_number_train
     begin
       puts 'Введите номер поезда'
       number = gets.chomp
-      raise 'Номер поезда должен быть другим! ' if number !~ VALID_NAME_TRAIN
-      number
+      case variant
+        when 1
+          @trains << TrainCargo.new(number)
+        when 2
+          @trains << TrainPass.new(number)
+      end
+      puts "Поезд номером: #{number} создан"
+      gets
     rescue => e
       puts e.message
       retry
@@ -302,32 +284,19 @@ class RailRoad
   end
 
   def make_wagon(variant)
-    case variant
-      when '1'
-        number = check_number_wagon
-        unless @wagons.find{|wagon| wagon.number == number}
-          @wagons << WagonCargo.new(number)
-          puts "Вагон #{number} создан"
-        else
-          puts "Вагон не создан"
-        end
-      when '2'
-        number = check_number_wagon
-        unless @wagons.find{|wagon| wagon.number == number}
-          @wagons << WagonPass.new(number)
-          puts "Вагон #{number} создан"
-        else
-          puts "Вагон не создан"
-        end
-    end
-  end
-
-  def check_number_wagon
     begin
       puts 'Введите номер вагона'
       number = gets.chomp
-      raise 'Номер вагона должен состоять из 3 цифр! ' if number !~ VALID_NAME_WAGON
-      number
+      case variant
+        when 1
+          @wagons << WagonCargo.new(number)
+        when 2
+          @wagons << WagonPass.new(number)
+        else 
+          return
+      end
+      puts "Вагон #{number} создан"
+      gets
     rescue => e
       puts e.message
       retry
@@ -338,41 +307,39 @@ class RailRoad
     print 'Сколько станций создать? '
     number = gets.chomp.to_i
     for station_number in (1..number)
-      name = check_name_station(station_number)
-      unless @stations.find{|station| station.name == name}
-        @stations << Station.new(name)
-        puts "Станция #{name} создана"
-      else
-        puts "Станция не создана"
+      begin
+        print "Введите название #{station_number} станции: "
+        name = gets.chomp
+        unless @stations.find{|station| station.name == name}
+          @stations << Station.new(name)
+          puts "Станция #{name} создана"
+        else
+          puts "Такая станция уже есть"
+          gets
+        end
+      rescue => e
+        puts e.message
+        retry
       end
     end
   end
 
-  def check_name_station(station_number)
+  def make_rout
     begin
-      print "Введите название #{station_number} станции: "
-      name = gets.chomp
-      raise 'Введено неправильное название!' if name !~ VALID_NAME_STATION
-      name
+      print "\nВведите начальную станцию маршрута: "
+      first_station = gets.chomp
+      first_station = @stations.find{|station| station.name == first_station}
+      print 'Введите конечную станцию маршрута: '
+      last_station = gets.chomp
+      last_station = @stations.find{|station| station.name == last_station}
+      return puts 'Такой маршрут уже есть!' if @routes.find{|rout| rout.stations.first == first_station && rout.stations.last == last_station} if @routes
+      number = Time.now.sec.to_s
+      @routes << Route.new(first_station, last_station, number)
+      puts "Маршрут создан"
     rescue => e
       puts e.message
       retry
     end
-  end
-
-  def make_rout
-    print "\nВведите начальную станцию маршрута: "
-    first_station = gets.chomp
-    first_station = @stations.find{|station| station.name == first_station}
-    return unless validate?(first_station)
-    print 'Введите конечную станцию маршрута: '
-    last_station = gets.chomp
-    last_station = @stations.find{|station| station.name == last_station}
-    return unless validate?(last_station)
-    return puts 'Маршрут не создан ' if last_station.nil? || first_station.nil?
-    number = Time.now.sec.to_s
-    @routes << Route.new(first_station, last_station, number)
-    puts "Машрут создан"
   end
 
   def validate!(data)

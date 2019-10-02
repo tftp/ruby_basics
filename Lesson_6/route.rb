@@ -4,6 +4,7 @@ class Route
 
   def initialize(begin_station, end_station, number)
     @stations = [begin_station, end_station]
+    validate!
     @number = number
     register_instance
   end
@@ -22,6 +23,12 @@ class Route
       print "--#{station.name}--"
     end
     puts
+  end
+  
+  def validate!
+    if @stations.first.nil? || @stations.last.nil?
+      raise "Введено неправильное значение станций!!!\n\n" 
+    end
   end
 
 end

@@ -1,6 +1,7 @@
 class Station
   include InstanceCounter
-  @@all_stations = []
+  @@all_stations = {}
+  VALID_NAME_STATION = /^[a-zA-Z]+\d*$/
 
   def self.all
     @@all_stations
@@ -10,8 +11,9 @@ class Station
 
   def initialize(name)
     @name = name
+    validate!
     @trains = []
-    @@all_stations << self
+    @@all_stations[name] = self
     register_instance
   end
 
@@ -33,6 +35,11 @@ class Station
 
   protected
   #нижестоящие методы пока не используются
+  
+  def validate!
+    raise "Введено неправильное название!\n\n" if name !~ VALID_NAME_STATION
+    raise "Такая станция уже есть!\n\n" if @@all_stations[name]
+  end
 
   def output_type(type)
     number_type = @trains.count{|train| train.type == type}
