@@ -1,14 +1,16 @@
 class Train
   include CompanyName
   include InstanceCounter
+  include Validate
+
   @@all_train = {}
   VALID_NAME_TRAIN = /^\w{3}-?\w{2}$/
 
-  
+
   def self.find(number)
       @@all_train[number]
   end
-  
+
   attr_accessor :speed, :wagons
   attr_reader :type, :number, :current_station
 

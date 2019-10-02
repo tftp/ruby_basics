@@ -1,5 +1,7 @@
 class Route
   include InstanceCounter
+  include Validate
+
   attr_accessor :stations, :number
 
   def initialize(begin_station, end_station, number)
@@ -24,10 +26,10 @@ class Route
     end
     puts
   end
-  
+
   def validate!
     if @stations.first.nil? || @stations.last.nil?
-      raise "Введено неправильное значение станций!!!\n\n" 
+      raise "Введено неправильное значение станций!!!\n\n"
     end
   end
 

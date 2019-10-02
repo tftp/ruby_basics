@@ -1,5 +1,7 @@
 class Station
   include InstanceCounter
+  include Validate
+  
   @@all_stations = {}
   VALID_NAME_STATION = /^[a-zA-Z]+\d*$/
 
@@ -35,7 +37,7 @@ class Station
 
   protected
   #нижестоящие методы пока не используются
-  
+
   def validate!
     raise "Введено неправильное название!\n\n" if name !~ VALID_NAME_STATION
     raise "Такая станция уже есть!\n\n" if @@all_stations[name]

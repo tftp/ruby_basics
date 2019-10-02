@@ -1,5 +1,7 @@
 class Wagon
   include CompanyName
+  include Validate
+  
   VALID_NAME_WAGON = /^\d{3}$/
   @@all_wagon = {}
   attr_reader :number, :type, :train
@@ -27,7 +29,7 @@ class Wagon
     print 'Номер поезда: '
     puts "#{@train.nil? ? 'Не прицеплен' : @train.number}"
   end
-  
+
   def validate!
     raise "Введён неправильный номер вагона!\n\n" if number !~ VALID_NAME_WAGON
     raise "Такой номер уже есть!\n\n" if @@all_wagon[number]
