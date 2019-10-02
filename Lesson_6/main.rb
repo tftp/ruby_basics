@@ -14,7 +14,7 @@ class RailRoad
   attr_reader :stations, :routes, :trains, :wagons
 
   def initialize
-    @stations =[]
+    @stations = []
     @trains = []
     @routes = []
     @wagons = []
@@ -139,8 +139,8 @@ class RailRoad
     station_between = gets.chomp
     station = @stations.find{|station| station.name == station_between} if @stations
     return unless validate?(station)
-    route.add_station(station_between)
-    puts "Станция #{station} добавлена."
+    route.add_station(station)
+    puts "Станция #{station_between} добавлена."
   end
 
   def del_station_from_route
@@ -155,7 +155,7 @@ class RailRoad
     station = @stations.find{|station| station.name == station_between} if @stations
     return unless validate?(station)
     if route.del_station(station)
-      puts 'Станция #{station_between} удалена.'
+      puts "Станция #{station_between} удалена."
     else
       puts 'Станция не удалена.'
     end
@@ -292,7 +292,7 @@ class RailRoad
           @wagons << WagonCargo.new(number)
         when 2
           @wagons << WagonPass.new(number)
-        else 
+        else
           return
       end
       puts "Вагон #{number} создан"
@@ -310,13 +310,9 @@ class RailRoad
       begin
         print "Введите название #{station_number} станции: "
         name = gets.chomp
-        unless @stations.find{|station| station.name == name}
-          @stations << Station.new(name)
-          puts "Станция #{name} создана"
-        else
-          puts "Такая станция уже есть"
-          gets
-        end
+        @stations << Station.new(name)
+        puts "Станция #{name} создана"
+        gets
       rescue => e
         puts e.message
         retry
@@ -332,7 +328,7 @@ class RailRoad
       print 'Введите конечную станцию маршрута: '
       last_station = gets.chomp
       last_station = @stations.find{|station| station.name == last_station}
-      return puts 'Такой маршрут уже есть!' if @routes.find{|rout| rout.stations.first == first_station && rout.stations.last == last_station} if @routes
+#      return puts 'Такой маршрут уже есть!' if @routes.find{|rout| rout.stations.first == first_station && rout.stations.last == last_station} if @routes
       number = Time.now.sec.to_s
       @routes << Route.new(first_station, last_station, number)
       puts "Маршрут создан"
