@@ -92,7 +92,8 @@ class RailRoad
       puts 'Введите 3, чтобы добавить маршрут поезду'
       puts 'Введите 4, чтобы добавить вагон к поезду'
       puts 'Введите 5, чтобы отцепить вагон от поезда'
-      puts 'Введите 6, чтобы переместить поезд по маршруту'
+      puts 'Введите 6, чтобы занять место или объем в вагоне'
+      puts 'Введите 7, чтобы переместить поезд по маршруту'
       puts 'Введите 0, чтобы выти на уровень вверх'
       variant = gets.chomp
       case variant
@@ -107,6 +108,8 @@ class RailRoad
         when '5'
           del_wagon_from_train
         when '6'
+          volume_wagon
+        when '7'
           moving_train
         when '0'
           break
@@ -220,6 +223,12 @@ class RailRoad
     else
       puts "Вагон не удален"
     end
+  end
+
+  def volume_wagon
+    puts 'Доступны следующие вагоны:'
+    print 'Cargo: '
+    
   end
 
   def moving_train
