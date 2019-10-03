@@ -226,9 +226,34 @@ class RailRoad
   end
 
   def volume_wagon
+    puts 'Заполняем вагон'
     puts 'Доступны следующие вагоны:'
     print 'Cargo: '
-    
+    Wagon.all.each{|key, volume| print " #{key}" if volume.type == :cargo}
+    print "\nPassenger: "
+    Wagon.all.each{|key, volume| print " #{key}" if volume.type == :pass}
+    print "\nВведите номер вагона для заполнения: "
+    number = gets.chomp
+    wagon = Wagon.all[number]
+    return unless validate? (wagon)
+    case wagon.type
+      when :cargo
+        puts "\nСвободное место в вагоне составляет #{wagon.free_volume}"
+        puts "Заполненное пространство в вагоне составляет #{wagon.held_volume}"
+        print "Введите данные для заполнения вагона: "
+        volume = gets.chomp.to_i
+        wagon.add_cargo(volume)
+        puts "\nИтого свободное/заполненное пространство в вагоне состовляет #{wagon.free_volume}/#{wagon.held_volume}"
+        gets
+      when :pass
+        puts "\nСвободное место в вагоне составляет #{wagon.free_volume}"
+        puts "Заполненное пространство в вагоне составляет #{wagon.held_volume}"
+        print "Введите 1 для заполнения вагона или другую клавишу для выхода без заполнения: "
+        variant = gets.chomp.to_i
+        wagon.add_passenger if variant == 1
+        puts "\nИтого свободное/заполненное пространство в вагоне состовляет #{wagon.free_volume}/#{wagon.held_volume}"
+        gets
+    end
   end
 
   def moving_train

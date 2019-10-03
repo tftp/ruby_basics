@@ -6,6 +6,10 @@ class Wagon
   @@all_wagon = {}
   attr_reader :number, :type, :train, :volume
 
+  def self.all
+    @@all_wagon
+  end
+
   def initialize(number, amount)
     @volume = [0, amount]
     @number = number
