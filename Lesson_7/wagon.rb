@@ -4,9 +4,10 @@ class Wagon
   
   VALID_NAME_WAGON = /^\d{3}$/
   @@all_wagon = {}
-  attr_reader :number, :type, :train
+  attr_reader :number, :type, :train, :volume
 
-  def initialize(number)
+  def initialize(number, amount)
+    @volume = [0, amount]
     @number = number
     validate!
     @train = []
@@ -19,6 +20,14 @@ class Wagon
 
   def train_out(train)
     @train.delete(train)
+  end
+  
+  def held_volume
+    @volume.first
+  end
+  
+  def free_volume
+    @volume.last - @volume.first
   end
 
   private
@@ -33,6 +42,8 @@ class Wagon
   def validate!
     raise "Введён неправильный номер вагона!\n\n" if number !~ VALID_NAME_WAGON
     raise "Такой номер уже есть!\n\n" if @@all_wagon[number]
+    raise "Количество мест или объем не может быть пустым\n\n" if volume.last.nil?
+    raise "Количество мест или объем не может быть нулевым или отрицательным\n\n" unless volume.last.positive?
   end
 
 end

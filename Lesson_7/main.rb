@@ -290,9 +290,13 @@ class RailRoad
       number = gets.chomp
       case variant
         when 1
-          @wagons << WagonCargo.new(number)
+          puts 'Введите максимальный объем груза:'
+          amount = gets.chomp.to_i
+          @wagons << WagonCargo.new(number, amount)
         when 2
-          @wagons << WagonPass.new(number)
+          puts 'Введите максимальное количество пассажиров:'
+          amount = gets.chomp.to_i
+          @wagons << WagonPass.new(number, amount)
         else
           return
       end
