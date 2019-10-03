@@ -45,6 +45,27 @@ class RailRoad
     end
   end
 
+  def test_data
+    @stations << Station.new('A') << Station.new('B') << Station.new('C')
+    @routes << Route.new(stations.first, stations.last, '100')
+    @routes.first.add_station(@stations[1])
+    @wagons << WagonCargo.new('001',50)
+    @wagons << WagonCargo.new('002',50)
+    @wagons << WagonCargo.new('003',45)
+    @wagons << WagonPass.new('004',50)
+    @wagons << WagonPass.new('005',50)
+    @wagons << WagonPass.new('006',45)
+    @trains << TrainCargo.new('qwe01') << TrainCargo.new('qwe02')
+    @trains << TrainPass.new('qwe03') << TrainPass.new('qwe04')
+    @trains.each{|train| train.add_route(@routes.first)}
+    @trains[0].wagon_add(@wagons[0])
+    @trains[1].wagon_add(@wagons[1])
+    @trains[1].wagon_add(@wagons[2])
+    @trains[2].wagon_add(@wagons[3])
+    @trains[2].wagon_add(@wagons[4])
+    @trains[3].wagon_add(@wagons[5])
+  end
+
   private
  #Нижестоящие методы испоьзуем только в классе RailRoad
 

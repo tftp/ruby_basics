@@ -1,7 +1,7 @@
 class Station
   include InstanceCounter
   include Validate
-  
+
   @@all_stations = {}
   VALID_NAME_STATION = /^[a-zA-Z]+\d*$/
 
@@ -17,6 +17,10 @@ class Station
     @trains = []
     @@all_stations[name] = self
     register_instance
+  end
+
+  def self.block_processing(block)
+    Station.all.each{|name, station| station.trains.each{|train| block.call(train)}}
   end
 
   def train_in(train)

@@ -11,6 +11,10 @@ class Train
       @@all_train[number]
   end
 
+  def self.block_processing(block)
+    @@all_train.each{|number, train| train.wagons.each{|wagon| block.call(wagon)}}
+  end
+
   attr_accessor :speed, :wagons
   attr_reader :type, :number, :current_station
 
