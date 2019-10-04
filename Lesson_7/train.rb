@@ -12,7 +12,10 @@ class Train
   end
 
   def self.block_processing(block)
-    @@all_train.each{|number, train| train.wagons.each{|wagon| block.call(wagon)}}
+    @@all_train.each do |number, train|
+      puts "Поезд #{number}:"
+      train.wagons.each{|wagon| block.call(wagon)}
+    end
   end
 
   attr_accessor :speed, :wagons

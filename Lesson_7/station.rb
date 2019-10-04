@@ -20,7 +20,10 @@ class Station
   end
 
   def self.block_processing(block)
-    Station.all.each{|name, station| station.trains.each{|train| block.call(train)}}
+    Station.all.each do |name, station|
+      puts "Станция #{name}:"
+      station.trains.each{|train| block.call(train)}
+    end
   end
 
   def train_in(train)

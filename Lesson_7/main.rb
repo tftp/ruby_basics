@@ -45,7 +45,7 @@ class RailRoad
     end
   end
 
-  def test_data
+  def data_test
     @stations << Station.new('A') << Station.new('B') << Station.new('C')
     @routes << Route.new(stations.first, stations.last, '100')
     @routes.first.add_station(@stations[1])
@@ -66,7 +66,7 @@ class RailRoad
     @trains[3].wagon_add(@wagons[5])
   end
 
-  private
+#  private
  #Нижестоящие методы испоьзуем только в классе RailRoad
 
   def menu_1
@@ -140,16 +140,35 @@ class RailRoad
 
   def menu_3
     puts "\nВывод данных об объектах."
-    list_station
-    print "\nВведите название станции, что бы увидеть список поездов на станции: "
-    station_name = gets.chomp
-    station = @stations.find{|station| station.name == station_name} if @stations
-    return unless validate?(station)
-    if station.trains.empty?
-      puts "\nНет поездов на станции #{station.name}"
-    else
-      station.output if station
+    puts 'Введите 1, для вывода списка поездов на станциях'
+    puts 'Введите 2, для вывода списка вагонов у поездов'
+    variant = gets.chomp
+    if variant == '1'
+      info_from_stations
+      gets
+    elsif variant == '2'
+      info_from_trains
+      gets
     end
+  end
+
+  def info_from_stations
+    block = proc do |object|
+      print "Номер поезда:#{object.number}, тип:#{object.type}, "
+      puts "количество вагонов:#{object.wagons.count}"
+    end
+    Station.block_processing block
+  end
+
+  def info_from_trains
+    block = proc do |object|
+      print "Номер вагона:#{object.number}, тип:#{object.type}, "
+      print "количество свободного объема: #{object.free_volume}, " if object.type == :cargo
+      print "количество занятого объема: #{object.held_volume} \n" if object.type == :cargo
+      print "количество свободных мест: #{object.free_volume}, " if object.type == :pass
+      print "количество занятых мест: #{object.held_volume} \n" if object.type == :pass
+    end
+    Train.block_processing block
   end
 
   def add_station_to_route
