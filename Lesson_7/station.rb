@@ -26,6 +26,10 @@ class Station
     end
   end
 
+  def each_train
+    trains.each{|train| yield(train)}
+  end
+
   def train_in(train)
     @trains << train
   end

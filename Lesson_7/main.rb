@@ -142,6 +142,8 @@ class RailRoad
     puts "\nВывод данных об объектах."
     puts 'Введите 1, для вывода списка поездов на станциях'
     puts 'Введите 2, для вывода списка вагонов у поездов'
+    puts 'Введите 3, для вывода списка поездов по номеру станции'
+    puts 'Введите 4, для вывода списка вагонов по номеру поезда'
     variant = gets.chomp
     if variant == '1'
       info_from_stations
@@ -149,6 +151,40 @@ class RailRoad
     elsif variant == '2'
       info_from_trains
       gets
+    elsif variant == '3'
+      info_trains
+      gets
+    elsif variant == '4'
+      info_wagons
+      gets
+    end
+  end
+
+  def info_trains
+    list_station
+    print 'Введите название станции: '
+    station_name = gets.chomp
+    station = @stations.find{|station| station.name == station_name} if @stations
+    return unless validate?(station)
+    station.each_train do |object|
+      print "Номер поезда:#{object.number}, тип:#{object.type}, "
+      puts "количество вагонов:#{object.wagons.count}"
+    end
+  end
+
+  def info_wagons
+    puts 'Доступны следующие поезда:'
+    list_object(@trains)
+    print 'Введите номер поезда: '
+    number_train = gets.chomp
+    train = @trains.find{|train| train.number == number_train} if @trains
+    return unless validate?(train)
+    train.each_wagon do |object|
+      print "Номер вагона:#{object.number}, тип:#{object.type}, "
+      print "количество свободного объема: #{object.free_volume}, " if object.type == :cargo
+      print "количество занятого объема: #{object.held_volume} \n" if object.type == :cargo
+      print "количество свободных мест: #{object.free_volume}, " if object.type == :pass
+      print "количество занятых мест: #{object.held_volume} \n" if object.type == :pass
     end
   end
 

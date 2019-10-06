@@ -6,11 +6,11 @@ class WagonCargo < Wagon
   end
 
   def add_cargo(volume)
-    self.volume[0] += volume unless self.volume.first + volume > self.volume.last
+    self.volume_held += volume unless self.volume_held + volume > self.volume_free
   end
 
   def del_cargo(volume)
-    self.volume[0] -= volume unless self.volume.first.negative?
+    self.volume_held -= volume unless self.volume_held.negative?
   end
 
 end

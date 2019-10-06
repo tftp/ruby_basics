@@ -4,13 +4,13 @@ class WagonPass < Wagon
     super number, amount
     @type = :pass
   end
-  
+
   def add_passenger
-    self.volume[0] += 1 if self.volume.first < self.volume.last
+    self.volume_held += 1 if self.volume_held < self.volume_free
   end
 
   def del_passenger
-    self.volume[0] -= 1 if self.volume.first.positive?
+    self.volume_held -= 1 if self.volume_held.positive?
   end
 
 end

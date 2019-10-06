@@ -30,6 +30,10 @@ class Train
     register_instance
   end
 
+  def each_wagon
+    wagons.each{|wagon| yield(wagon)}
+  end
+
   def wagon_add (wagon)
     if self.speed == 0
       self.wagons << wagon
