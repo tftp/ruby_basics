@@ -12,10 +12,10 @@ class Train
     @@all_train[number]
   end
 
-  def self.block_processing(block)
+  def self.block_processing
     @@all_train.each do |number, train|
       puts "Поезд #{number}:"
-      train.wagons.each { |wagon| block.call(wagon) }
+      train.wagons.each { |wagon| yield(wagon) }
     end
   end
 

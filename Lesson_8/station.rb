@@ -22,10 +22,10 @@ class Station
     register_instance
   end
 
-  def self.block_processing(block)
+  def self.block_processing
     Station.all.each do |name, station|
       puts "Станция #{name}:"
-      station.trains.each { |train| block.call(train) }
+      station.trains.each { |train| yield(train) }
     end
   end
 
