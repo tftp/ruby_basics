@@ -16,4 +16,19 @@ Style/Documentation:
   Enabled: false
 
 Metrics/LineLength:
-  Max: 85
+  Max: 90
+
+Metrics/MethodLength:
+  Max: 18
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
