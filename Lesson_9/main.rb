@@ -67,6 +67,7 @@ class RailRoad
 
   def menu_1
     loop do
+      puts "\n Создание объектов."
       puts 'Введите 1, чтобы создать станцию'
       puts 'Введите 2, чтобы создать маршрут'
       puts 'Введите 3, чтобы создать вагон'
@@ -79,6 +80,7 @@ class RailRoad
 
   def menu_2
     loop do
+      puts "\n Обработка объектов."
       puts 'Введите 1, чтобы добавить станцию в маршрут'
       puts 'Введите 2, чтобы удалить станцию из маршрута'
       puts 'Введите 3, чтобы добавить маршрут поезду'
@@ -310,6 +312,7 @@ class RailRoad
     print 'Доступны следующие станции: '
     if @stations.empty?
       print 'нет доступных станций.'
+      false
     else
       @stations.each { |station| print " #{station.name} " }
     end
@@ -381,7 +384,7 @@ class RailRoad
   end
 
   def make_rout
-    list_station
+    return unless list_station
     begin
       print "\nВведите начальную станцию маршрута: "
       first_station = gets.chomp
