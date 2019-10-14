@@ -1,39 +1,37 @@
 module Validation
-  def validate(name, *args)
-    var_name = "@#{name}".to_sym
-    var_hash = "@var_hash".to_sym
-    value = instance_variable_get(var_hash)
-    if value.nil?
-      instance_variable_set(var_hash, [[var_name, args]])
-    else
-      instance_variable_set(var_hash, value.push([var_name, args]))
-    end
+  def self.included(base)
+    base.extend(ClassMethods)
+    base.send :include, InstanceMethods
+  end
 
-    define_method(:validate!) do
-      self.class.instance_variable_get(var_hash).uniq.each do |key|
+  module ClassMethods
+    def validate(name, *args)
+      var_name = "@#{name}".to_sym
+      var_array = "@var_array".to_sym
+      value = instance_variable_get(var_array)
+      if value.nil?
+        instance_variable_set(var_array, [[var_name, args]])
+      else
+        instance_variable_set(var_array, value.push([var_name, args]))
+      end
+    end
+  end
+
+  module InstanceMethods
+    def validate!
+      var_array = "@var_array".to_sym
+      self.class.instance_variable_get(var_array).uniq.each do |key|
         value = instance_variable_get(key.first)
-        value_compare = self.class.class_variable_get(self.class.class_variables[0])
-#        puts "#{key.inspect}"
-#        puts "#{value}"
-#        puts "#{value_compare}"
-        case key.last.first
-        when :presence
-          if value.nil? || (value.empty? if value.methods.include?(:empty))
-            raise "Nil or empty! #{key.first} can't be nil or empty!"
-          end
-        when :type
-          unless value.class == key[1][1]
-            raise "Type mismatch! for #{key.first}=#{value}. Must be #{key[1][1]}"
-          end
-        when :format
-          raise "Format mismatch! For #{key.first}=#{value}" unless value =~ key[1][1]
-        when :compare
-          raise "This name or number already exists\n\n" if value_compare.has_key? value
+        value_type = key[1][0]
+        value_arg = key[1][1]
+        if self.class.class_variables[0]
+          value_compare = self.class.class_variable_get(self.class.class_variables[0])
         end
+        self.public_send(value_type, value, value_arg, value_compare)
       end
     end
 
-    define_method(:validate?) do
+    def validate?
       begin
         validate!
         return true
@@ -43,6 +41,32 @@ module Validation
       end
     end
 
-  end
+    def presence(*args)
+      value = args[0]
+      if value.nil? || (value.empty? if value.methods.include?(:empty))
+        raise "Nil or empty! Can't be nil or empty!"
+      end
+    end
 
+    def format (*args)
+      value = args[0]
+      data = args[1]
+      raise "Format mismatch! For #{value}" unless value =~ data
+    end
+
+    def type(*args)
+      value = args[0]
+      data = args[1]
+      unless value.class == data
+        raise "Type mismatch! Input #{value}. Must be #{data}"
+      end
+    end
+
+    def compare(*args)
+      value = args[0]
+      value_compare = args[2]
+      raise "This name or number already exists\n\n" if value_compare.has_key? value
+    end
+
+  end
 end
