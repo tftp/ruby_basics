@@ -2,7 +2,7 @@
 
 # class Station for stations instance
 class Station
-  extend Validation
+  include Validation
 
   include InstanceCounter
 #  include Validate

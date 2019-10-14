@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Wagon
-  extend Validation
+  include Validation
   include CompanyName
 
   VALID_NAME_WAGON = /^\d{3}$/.freeze

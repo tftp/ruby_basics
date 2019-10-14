@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Train
-  extend Validation
+  include Validation
 
   include CompanyName
   include InstanceCounter

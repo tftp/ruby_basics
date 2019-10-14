@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Route
-  extend Validation
+  include Validation
 
   include InstanceCounter
 #  include Validate
